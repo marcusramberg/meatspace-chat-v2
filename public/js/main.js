@@ -4,6 +4,7 @@ var Fingerprint = require('fingerprintjs');
 var music = require('./music');
 var services = require('./services');
 var vid2gif = require('./vid2gif');
+var notificon = require('notificon');
 var UserIdManager = require('./user-id-manager');
 var socket = io();
 
@@ -14,6 +15,7 @@ var rtcInitialized = false;
 var CHAR_LIMIT = 250;
 var NUM_FRAMES = 10;
 var GIF_WORKER_PATH = 'gif-worker.js';
+
 
 rtc = new Webrtc2images({
   width: 200,
@@ -110,6 +112,7 @@ form.submit(function (ev) {
 });
 
 info.click(function () {
+  notificon('<3');
   if (infoScreen.hasClass('on')) {
     infoScreen.removeClass('on');
   } else {
@@ -156,7 +159,11 @@ messages.on('click', '.convert', function (ev) {
   });
 });
 
+var count = 1;
+
 doc.on('visibilitychange', function (ev) {
+  notificon("0");
+  count = 1;
   var hidden = document.hidden;
   $('.in-view video').each(function () {
     if (hidden) {
@@ -172,6 +179,7 @@ socket.on('active', function (data) {
 });
 
 socket.on('message', function (data) {
+  notificon(count++ + "");
   services.getMessage(data, mutedFP, userIdManager, profile, messages);
 });
 
